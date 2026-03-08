@@ -24,6 +24,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
+    // ✅ FIX: Skip this filter entirely for OPTIONS preflight requests
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return "OPTIONS".equalsIgnoreCase(request.getMethod());
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,

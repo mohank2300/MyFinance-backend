@@ -23,16 +23,34 @@ public class JwtService {
         this.expirationMs = expirationMs;
     }
 
+    // Original method — keeps backward compatibility
     public String generateToken(String email) {
+        return generateToken(email, null);
+    }
+
+    // New method — embeds userId in token
+    public String generateToken(String email, Long userId) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expirationMs);
 
-        return Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(now)
-                .setExpiration(expiry)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+                .setExpiration(expiry);
+
+        if (userId != null) {
+            builder.claim("userId", userId);
+        }
+
+        return builder.signWith(key, SignatureAlgorithm.HS256).compact();
+    }
+
+    // Extract userId from token claim
+    public Long extractUserId(String token) {
+        Claims claims = parseClaims(token).getBody();
+        Object userId = claims.get("userId");
+        if (userId == null) return null;
+        return ((Number) userId).longValue();
     }
 
     public boolean isValid(String token) {
