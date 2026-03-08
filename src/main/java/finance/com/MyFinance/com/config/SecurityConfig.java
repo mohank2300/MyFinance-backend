@@ -42,7 +42,8 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5174",
-                "https://myfinance-frontend.vercel.app/"
+                "https://myfinance-frontend.vercel.app/",
+                "https://myfinance-frontend-f1ptuu9fv-mohank2300s-projects.vercel.app"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
