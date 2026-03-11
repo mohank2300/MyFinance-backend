@@ -51,22 +51,23 @@ public class SplitController {
             splitMemberRepository.save(member);
 
             // Send email
-            String subject = user.getFullName() + " split an expense with you!";
-            String body = "<h2>Hi " + friend.getName() + "!</h2>"
-                    + "<p><strong>" + user.getFullName() + "</strong> split <strong>"
-                    + request.getDescription() + "</strong> with you.</p>"
-                    + "<p>Your share: <strong>$" + String.format("%.2f", perPerson / 100.0) + "</strong></p>"
-                    + "<p>Total amount: $" + String.format("%.2f", request.getTotalAmountCents() / 100.0) + "</p>"
-                    + "<br><p>Sent via MyFinance App</p>";
             try {
+                String subject = user.getFullName() + " split an expense with you!";
+                String body = "<h2>Hi " + friend.getName() + "!</h2>"
+                        + "<p><strong>" + user.getFullName() + "</strong> split <strong>"
+                        + request.getDescription() + "</strong> with you.</p>"
+                        + "<p>Your share: <strong>$" + String.format("%.2f", perPerson / 100.0) + "</strong></p>"
+                        + "<p>Total amount: $" + String.format("%.2f", request.getTotalAmountCents() / 100.0) + "</p>"
+                        + "<br><p>Sent via MyFinance App</p>";
                 emailService.sendEmail(friend.getEmail(), subject, body);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.err.println("Email failed: " + e.getMessage());
             }
         }
 
         return ResponseEntity.ok(Map.of("message", "Split created and emails sent!"));
     }
+
 
     @GetMapping
     public ResponseEntity<?> getSplits(Authentication auth) {
