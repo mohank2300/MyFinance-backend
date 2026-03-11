@@ -35,8 +35,8 @@ public class EmailService {
         StringBuilder rows = new StringBuilder();
         for (Transaction t : transactions) {
             String color = t.getType().name().equals("INCOME") ? "#6fcf97" : "#eb5757";
-            String sign  = t.getType().name().equals("INCOME") ? "+" : "−";
-            String desc  = t.getDescription() != null ? t.getDescription() : "—";
+            String sign = t.getType().name().equals("INCOME") ? "+" : "−";
+            String desc = t.getDescription() != null ? t.getDescription() : "—";
             rows.append("<tr>")
                     .append("<td style=\"padding:10px 12px;border-bottom:1px solid #1e1e1e;color:#aaa;\">").append(t.getCreatedAt().atZone(java.time.ZoneId.systemDefault()).toLocalDate().format(fmt)).append("</td>")
                     .append("<td style=\"padding:10px 12px;border-bottom:1px solid #1e1e1e;color:#ccc;\">").append(t.getCategory()).append("</td>")
@@ -45,9 +45,9 @@ public class EmailService {
                     .append("</tr>");
         }
 
-        String netSign   = net >= 0 ? "+" : "−";
-        String netColor  = net >= 0 ? "#e8c97e" : "#eb5757";
-        String today     = java.time.LocalDate.now().format(fmt);
+        String netSign = net >= 0 ? "+" : "−";
+        String netColor = net >= 0 ? "#e8c97e" : "#eb5757";
+        String today = java.time.LocalDate.now().format(fmt);
 
         String html = "<div style=\"background:#0a0a0a;padding:40px 0;font-family:'Segoe UI',sans-serif;\">"
                 + "<div style=\"max-width:600px;margin:0 auto;background:#111;border-radius:16px;overflow:hidden;border:1px solid #1e1e1e;\">"
@@ -109,4 +109,15 @@ public class EmailService {
         helper.setText(html, true);
         mailSender.send(message);
     }
+
+
+    public void sendEmail(String toEmail, String subject, String htmlBody) throws Exception {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(toEmail);
+        helper.setSubject(subject);
+        helper.setText(htmlBody, true);
+        mailSender.send(message);
+    }
+
 }
